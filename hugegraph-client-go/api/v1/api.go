@@ -17,17 +17,22 @@
 
 package v1
 
-import "github.com/apache/hugegraph-toolchain/hugegraph-client-go/api"
+import (
+	"github.com/apache/hugegraph-toolchain/hugegraph-client-go/api"
+	"github.com/apache/hugegraph-toolchain/hugegraph-client-go/api/v1/traverser"
+)
 
 type APIV1 struct {
-    Version Version
-    Schema  Schema
+	Version   Version
+	Schema    Schema
+	Traverser *traverser.Traverser
 }
 
 // New creates new API
 func New(t api.Transport) *APIV1 {
-    return &APIV1{
-        Version: newVersionFunc(t),
-        Schema:  newSchemaFunc(t),
-    }
+	return &APIV1{
+		Version:   newVersionFunc(t),
+		Schema:    newSchemaFunc(t),
+		Traverser: traverser.New(t),
+	}
 }
