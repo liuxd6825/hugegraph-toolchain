@@ -49,7 +49,7 @@ type MultiNodeShortestPathRequest struct {
 
 type MultiNodeShortestPathRequestData struct {
 	Vertices   interface{} `json:"vertices"`
-	Step       interface{} `json:"step"`
+	Step       Steps       `json:"step"`
 	MaxDepth   int         `json:"max_depth"`
 	Capacity   int64       `json:"capacity"`
 	WithVertex bool        `json:"with_vertex"`
@@ -71,8 +71,8 @@ func (r MultiNodeShortestPathRequest) Do(ctx context.Context, transport api.Tran
 	if r.reqData.Vertices == nil {
 		return nil, errors.New("multi_node_shortest_path: vertices is required")
 	}
-	if r.reqData.Step == nil {
-		return nil, errors.New("multi_node_shortest_path: step is required")
+	if r.reqData.Step.Direction == "" {
+		return nil, errors.New("multi_node_shortest_path: step.direction is required")
 	}
 	if r.reqData.MaxDepth <= 0 {
 		return nil, errors.New("multi_node_shortest_path: max_depth must be > 0")

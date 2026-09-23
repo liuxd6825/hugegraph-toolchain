@@ -15,33 +15,36 @@
  * under the License.
  */
 
-
 package gremlin_test
 
 import (
-    "fmt"
-    "github.com/apache/hugegraph-toolchain/hugegraph-client-go"
-    "log"
-    "testing"
+	"fmt"
+	"log"
+	"testing"
+
+	"github.com/apache/hugegraph-toolchain/hugegraph-client-go"
 )
 
 func TestGremlin(t *testing.T) {
 
-    client, err := hugegraph.NewDefaultCommonClient()
-    if err != nil {
-        log.Println(err)
-    }
+	client, err := hugegraph.NewDefaultCommonClient()
+	if err != nil {
+		log.Println(err)
+	}
 
-    respPost, err := client.Gremlin.Post(
-        client.Gremlin.Post.WithGremlin("g.V().limit(3)"),
-    )
-    if err != nil {
-        log.Fatalln(err)
-    }
-    if respPost.StatusCode != 200 {
-        t.Errorf("client.Gremlin.Post http_status=%d, gremlin_status=%d, message=%s",
-            respPost.StatusCode, respPost.Data.Status.Code, respPost.Data.Status.Message)
-    }
-    fmt.Println(respPost.Data.Result.Data)
+	respPost, err := client.Gremlin.Post(
+		client.Gremlin.Post.WithGremlin("g.V().limit(3)"),
+		client.Gremlin.Post.WithGraph("hugegraph"),
+		client.Gremlin.Post.WithGraphSpace("DEFAULT"),
+	)
+	client.Gremlin.Post.WithGremlin("")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	if respPost.StatusCode != 200 {
+		t.Errorf("client.Gremlin.Post http_status=%d, gremlin_status=%d, message=%s",
+			respPost.StatusCode, respPost.Data.Status.Code, respPost.Data.Status.Message)
+	}
+	fmt.Println(respPost.Data.Result.Data)
 
 }

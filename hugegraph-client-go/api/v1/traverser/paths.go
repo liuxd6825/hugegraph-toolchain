@@ -178,14 +178,14 @@ type PathsAdvancedRequest struct {
 }
 
 type PathsAdvancedRequestData struct {
-	Sources    []string `json:"sources"`
-	Targets    []string `json:"targets"`
-	Step       Step     `json:"step"`
-	MaxDepth   int      `json:"max_depth"`
-	Nearest    *bool    `json:"nearest,omitempty"`
-	Capacity   *int64   `json:"capacity,omitempty"`
-	Limit      *int64   `json:"limit,omitempty"`
-	WithVertex *bool    `json:"with_vertex,omitempty"`
+	Sources    SourcesTargets `json:"sources"`
+	Targets    SourcesTargets `json:"targets"`
+	Step       Step           `json:"step"`
+	MaxDepth   int            `json:"max_depth"`
+	Nearest    *bool          `json:"nearest,omitempty"`
+	Capacity   *int64         `json:"capacity,omitempty"`
+	Limit      *int64         `json:"limit,omitempty"`
+	WithVertex *bool          `json:"with_vertex,omitempty"`
 }
 
 type PathsAdvancedResponse struct {
@@ -196,16 +196,16 @@ type PathsAdvancedResponse struct {
 }
 
 type PathsAdvancedResponseData struct {
-	Paths    []KoutPath               `json:"paths"`
-	Vertices []map[string]interface{} `json:"vertices,omitempty"`
+	Paths    []KoutPath `json:"paths"`
+	Vertices []any      `json:"vertices,omitempty"`
 }
 
 func (r PathsAdvancedRequest) Do(ctx context.Context, transport api.Transport) (*PathsAdvancedResponse, error) {
-	if r.reqData.Sources == nil {
-		return nil, errors.New("paths_advanced: sources is required")
+	if len(r.reqData.Sources.Ids) == 0 {
+		return nil, errors.New("paths_advanced: sources.ids is required")
 	}
-	if r.reqData.Targets == nil {
-		return nil, errors.New("paths_advanced: targets is required")
+	if len(r.reqData.Targets.Ids) == 0 {
+		return nil, errors.New("paths_advanced: targets.ids is required")
 	}
 	if r.reqData.MaxDepth <= 0 {
 		return nil, errors.New("paths_advanced: max_depth must be > 0")
@@ -274,6 +274,8 @@ func newCustomizedPathsFunc(t api.Transport) CustomizedPaths {
 	}
 }
 
+// CustomizedPaths
+// 根据一批起始顶点、边规则（包括方向、边的类型和属性过滤）和最大深度等条件查找符合条件的所有的路径
 type CustomizedPaths func(o ...func(*CustomizedPathsRequest)) (*CustomizedPathsResponse, error)
 
 type CustomizedPathsRequest struct {
@@ -283,17 +285,51 @@ type CustomizedPathsRequest struct {
 }
 
 type CustomizedPathsRequestData struct {
-	Sources    Sources `json:"sources"`
-	Steps      Steps   `json:"steps"`
-	SortBy     string  `json:"sort_by,omitempty"`
-	Capacity   int64   `json:"capacity"`
-	Limit      int64   `json:"limit"`
-	WithVertex bool    `json:"with_vertex"`
+	// 定义起始顶点，必填项，指定方式包括：
+	Sources SourcesTargets `json:"sources"`
+	// 表示从起始顶点走过的路径规则，是一组 Step 的列表。必填项。每个 Step 的结构如下
+	Steps Steps `json:"steps"`
+	// sort_by：根据路径的权重排序，选填项，默认为 NONE：
+	SortBy CustomizedPathsSortBy `json:"sort_by,omitempty"`
+	// capacity: 遍历过程中最大的访问的顶点数目，选填项，默认为 10000000
+	Capacity *int64 `json:"capacity"`
+	// limit：返回的路径的最大数目，选填项，默认为 10
+	Limit *int64 `json:"limit"`
+	// with_vertex：true 表示返回结果包含完整的顶点信息（路径中的全部顶点），false 时表示只返回顶点 id，选填项，默认为 false
+	WithVertex bool `json:"with_vertex"`
 }
 
-type Sources struct {
-	Ids        []string       `json:"ids,omitempty"`
-	Label      string         `json:"label,omitempty"`
+type CustomizedPathsSortBy string
+
+const (
+	NONE CustomizedPathsSortBy = "NONE"
+	INCR CustomizedPathsSortBy = "INCR"
+	DECR CustomizedPathsSortBy = "DECR"
+)
+
+func (c CustomizedPathsSortBy) NONE() CustomizedPathsSortBy {
+	return NONE
+}
+
+func (c CustomizedPathsSortBy) INCR() CustomizedPathsSortBy {
+	return INCR
+}
+
+func (c CustomizedPathsSortBy) DECR() CustomizedPathsSortBy {
+	return DECR
+}
+
+func (c CustomizedPathsSortBy) String() string {
+	return string(c)
+}
+
+type SourcesTargets struct {
+	// 通过顶点 id 列表提供起始顶点
+	Ids []string `json:"ids,omitempty"`
+	// 如果没有指定 ids，则使用 label 和 properties 的联合条件查询起始顶点
+	// 顶点的类型
+	Label string `json:"label,omitempty"`
+	// 通过属性的值查询起始顶点
 	Properties map[string]any `json:"properties,omitempty"`
 }
 
@@ -379,16 +415,37 @@ func newTemplatePathsFunc(t api.Transport) TemplatePaths {
 	}
 }
 
+// TemplatePaths
+// 适合查找各种复杂的模板路径，比如 personA -(朋友)-> personB -(同学)-> personC，
+// 其中"朋友"和"同学"边可以分别是最多 3 层和 4 层的情况
 type TemplatePaths func(o ...func(*TemplatePathsRequest)) (*TemplatePathsResponse, error)
 
 type TemplatePathsReqData struct {
-	Sources    interface{} `json:"sources"`
-	Targets    interface{} `json:"targets"`
-	Steps      interface{} `json:"steps"`
-	WithRing   bool        `json:"with_ring"`
-	Capacity   int64       `json:"capacity"`
-	Limit      int64       `json:"limit"`
-	WithVertex bool        `json:"with_vertex"`
+	Sources    SourcesTargets      `json:"sources"`
+	Targets    SourcesTargets      `json:"targets"`
+	Steps      []TemplatePathsStep `json:"steps"`
+	WithRing   bool                `json:"with_ring"`
+	Capacity   int64               `json:"capacity"`
+	Limit      int64               `json:"limit"`
+	WithVertex bool                `json:"with_vertex"`
+}
+
+type TemplatePathsStep struct {
+	// 表示边的方向（OUT,IN,BOTH），默认是 BOTH
+	Direction Direction `json:"direction"`
+	// 边的类型列表
+	Labels []string `json:"labels"`
+	// 通过属性的值过滤边
+	Properties map[string]any `json:"properties"`
+	// 当前 step 可以重复的次数，当为 N 时，表示从起始顶点可以经过当前 step 1-N 次
+	MaxDegree *int `json:"max_degree"`
+	// 用于设置查询过程中舍弃超级顶点的最小边数，即当某个顶点的邻接边数目大于
+	// skip_degree 时，完全舍弃该顶点。选填项，如果开启时，需满足 skip_degree >= max_degree 约束，默认为 0 (不启用)，
+	// 表示不跳过任何点 ( 	注意：开启此配置后，遍历时会尝试访问一个顶点的 skip_degree 条边，而不仅仅是 max_degree 条边，
+	// 这样有额外的遍历开销，对查询性能影响可能有较大影响，请确认理解后再开启)
+	SkipDegree *int `json:"skip_degree"`
+	// 当前 step 可以重复的次数，当为 N 时，表示从起始顶点可以经过当前 step 1-N 次
+	MaxTime *int `json:"max_time"`
 }
 
 type TemplatePathsRequest struct {
@@ -410,13 +467,13 @@ type TemplatePathsResponseData struct {
 }
 
 func (r TemplatePathsRequest) Do(ctx context.Context, transport api.Transport) (*TemplatePathsResponse, error) {
-	if r.reqData.Sources == nil {
+	if len(r.reqData.Sources.Ids) == 0 {
 		return nil, errors.New("template_paths: sources is required")
 	}
-	if r.reqData.Targets == nil {
+	if len(r.reqData.Targets.Ids) == 0 {
 		return nil, errors.New("template_paths: targets is required")
 	}
-	if r.reqData.Steps == nil {
+	if len(r.reqData.Steps) == 0 {
 		return nil, errors.New("template_paths: steps is required")
 	}
 

@@ -374,8 +374,8 @@ func TestTraverserRequiredFieldValidation(t *testing.T) {
 		{"Count_no_source", func() error {
 			_, err := client.Traverser.Count(
 				client.Traverser.Count.WithReqData(traverser.CountRequestData{
-					Steps: traverser.Steps{
-						Direction: traverser.Both,
+					Steps: []traverser.CountRequestStep{
+						{Direction: traverser.Both},
 					},
 				}),
 			)
@@ -814,8 +814,12 @@ func TestTraverserPathsAdvanced(t *testing.T) {
 	client := requireServer(t, "")
 	resp, err := client.Traverser.PathsAdvanced(
 		client.Traverser.PathsAdvanced.WithReqData(traverser.PathsAdvancedRequestData{
-			Sources:  []string{"S1:marko"},
-			Targets:  []string{"S2:marko"},
+			Sources: traverser.SourcesTargets{
+				Ids: []string{"PnRAAeb4liYYMyLfpsA7e9bu_110078173020001"},
+			},
+			Targets: traverser.SourcesTargets{
+				Ids: []string{"PnRAAeb4liYYMyLfpsA7e9bu_李兴源"},
+			},
 			Step:     traverser.Step{Direction: traverser.Both},
 			MaxDepth: 3,
 			Limit:    traverser.NewInt64(1000),
@@ -833,7 +837,9 @@ func TestTraverserCustomizedPaths(t *testing.T) {
 	client := requireServer(t, "")
 	resp, err := client.Traverser.CustomizedPaths(
 		client.Traverser.CustomizedPaths.WithReqData(traverser.CustomizedPathsRequestData{
-			Sources: traverser.Sources{},
+			Sources: traverser.SourcesTargets{
+				Ids: []string{"PnRAAeb4liYYMyLfpsA7e9bu_李兴源"},
+			},
 			Steps: traverser.Steps{
 				Direction: traverser.Both,
 			},
@@ -852,10 +858,16 @@ func TestTraverserTemplatePaths(t *testing.T) {
 	client := requireServer(t, "")
 	resp, err := client.Traverser.TemplatePaths(
 		client.Traverser.TemplatePaths.WithReqData(traverser.TemplatePathsReqData{
-			Sources: map[string]interface{}{},
-			Targets: map[string]interface{}{},
-			Steps:   []interface{}{},
-			Limit:   5,
+			Sources: traverser.SourcesTargets{
+				Ids: []string{"PnRAAeb4liYYMyLfpsA7e9bu_李兴源"},
+			},
+			Targets: traverser.SourcesTargets{
+				Ids: []string{"PnRAAeb4liYYMyLfpsA7e9bu_李兴源"},
+			},
+			Steps: traverser.Steps{
+				Direction: traverser.Both,
+			},
+			Limit: 5,
 		}),
 	)
 	if err != nil {
@@ -871,7 +883,9 @@ func TestTraverserMultiNodeShortestPath(t *testing.T) {
 	resp, err := client.Traverser.MultiNodeShortestPath(
 		client.Traverser.MultiNodeShortestPath.WithReqData(traverser.MultiNodeShortestPathRequestData{
 			Vertices: map[string]interface{}{},
-			Step:     map[string]interface{}{},
+			Step: traverser.Steps{
+				Direction: traverser.Both,
+			},
 			MaxDepth: 5,
 		}),
 	)
@@ -887,7 +901,9 @@ func TestTraverserCustomizedCrosspoints(t *testing.T) {
 	client := requireServer(t, "")
 	resp, err := client.Traverser.CustomizedCrosspoints(
 		client.Traverser.CustomizedCrosspoints.WithReqData(traverser.CustomizedCrosspointsRequestData{
-			Sources:      map[string]interface{}{},
+			Sources: traverser.SourcesTargets{
+				Ids: []string{"PnRAAeb4liYYMyLfpsA7e9bu_李兴源"},
+			},
 			PathPatterns: []interface{}{},
 			Limit:        5,
 		}),
@@ -904,7 +920,9 @@ func TestTraverserFusiformSimilarity(t *testing.T) {
 	client := requireServer(t, "")
 	resp, err := client.Traverser.FusiformSimilarity(
 		client.Traverser.FusiformSimilarity.WithReqData(traverser.FusiformSimilarityRequestData{
-			Sources:      map[string]interface{}{},
+			Sources: traverser.SourcesTargets{
+				Ids: []string{"PnRAAeb4liYYMyLfpsA7e9bu_李兴源"},
+			},
 			MinNeighbors: 1,
 			Alpha:        0.5,
 			Top:          5,
@@ -923,7 +941,7 @@ func TestTraverserCount(t *testing.T) {
 	resp, err := client.Traverser.Count(
 		client.Traverser.Count.WithReqData(traverser.CountRequestData{
 			Source: "1:marko",
-			Steps:  []interface{}{},
+			Steps:  []traverser.CountRequestStep{},
 		}),
 	)
 	if err != nil {

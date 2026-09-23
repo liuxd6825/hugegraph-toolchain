@@ -48,20 +48,20 @@ type FusiformSimilarityRequest struct {
 }
 
 type FusiformSimilarityRequestData struct {
-	Sources          interface{} `json:"sources"`
-	Label            string      `json:"label,omitempty"`
-	Direction        string      `json:"direction,omitempty"`
-	MinNeighbors     int         `json:"min_neighbors"`
-	Alpha            float64     `json:"alpha"`
-	MinSimilars      int         `json:"min_similars"`
-	Top              int         `json:"top,omitempty"`
-	GroupProperty    string      `json:"group_property,omitempty"`
-	MinGroups        int         `json:"min_groups,omitempty"`
-	MaxDegree        int64       `json:"max_degree"`
-	Capacity         int64       `json:"capacity"`
-	Limit            int64       `json:"limit"`
-	WithIntermediary bool        `json:"with_intermediary"`
-	WithVertex       bool        `json:"with_vertex"`
+	Sources          SourcesTargets `json:"sources"`
+	Label            string         `json:"label,omitempty"`
+	Direction        string         `json:"direction,omitempty"`
+	MinNeighbors     int            `json:"min_neighbors"`
+	Alpha            float64        `json:"alpha"`
+	MinSimilars      int            `json:"min_similars"`
+	Top              int            `json:"top,omitempty"`
+	GroupProperty    string         `json:"group_property,omitempty"`
+	MinGroups        int            `json:"min_groups,omitempty"`
+	MaxDegree        int64          `json:"max_degree"`
+	Capacity         int64          `json:"capacity"`
+	Limit            int64          `json:"limit"`
+	WithIntermediary bool           `json:"with_intermediary"`
+	WithVertex       bool           `json:"with_vertex"`
 }
 
 type FusiformSimilarityResponse struct {
@@ -84,7 +84,7 @@ type FusiformSimilarItem struct {
 }
 
 func (r FusiformSimilarityRequest) Do(ctx context.Context, transport api.Transport) (*FusiformSimilarityResponse, error) {
-	if r.reqData.Sources == nil {
+	if len(r.reqData.Sources.Ids) == 0 {
 		return nil, errors.New("fusiform_similarity: sources is required")
 	}
 	if r.reqData.MinNeighbors <= 0 {

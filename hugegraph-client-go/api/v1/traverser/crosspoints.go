@@ -183,12 +183,12 @@ type CustomizedCrosspointsRequest struct {
 }
 
 type CustomizedCrosspointsRequestData struct {
-	Sources      interface{} `json:"sources"`
-	PathPatterns interface{} `json:"path_patterns"`
-	Capacity     int64       `json:"capacity"`
-	Limit        int64       `json:"limit"`
-	WithPath     bool        `json:"with_path"`
-	WithVertex   bool        `json:"with_vertex"`
+	Sources      SourcesTargets `json:"sources"`
+	PathPatterns interface{}    `json:"path_patterns"`
+	Capacity     int64          `json:"capacity"`
+	Limit        int64          `json:"limit"`
+	WithPath     bool           `json:"with_path"`
+	WithVertex   bool           `json:"with_vertex"`
 }
 
 type CustomizedCrosspointsResponse struct {
@@ -209,7 +209,7 @@ type CrosspointsPathList struct {
 }
 
 func (r CustomizedCrosspointsRequest) Do(ctx context.Context, transport api.Transport) (*CustomizedCrosspointsResponse, error) {
-	if r.reqData.Sources == nil {
+	if len(r.reqData.Sources.Ids) == 0 {
 		return nil, errors.New("customized_crosspoints: sources is required")
 	}
 	if r.reqData.PathPatterns == nil {

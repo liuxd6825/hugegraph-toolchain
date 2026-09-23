@@ -48,10 +48,17 @@ type CountRequest struct {
 }
 
 type CountRequestData struct {
-	Source            interface{} `json:"source"`
-	Steps             interface{} `json:"steps"`
-	ContainsTraversed bool        `json:"contains_traversed,omitempty"`
-	DedupSize         int64       `json:"dedup_size,omitempty"`
+	Source            interface{}        `json:"source"`
+	Steps             []CountRequestStep `json:"steps"`
+	ContainsTraversed bool               `json:"contains_traversed,omitempty"`
+	DedupSize         int64              `json:"dedup_size,omitempty"`
+}
+
+type CountRequestStep struct {
+	Direction  Direction `json:"direction"`
+	Labels     []string  `json:"labels"`
+	MaxDegree  int       `json:"max_degree"`
+	SkipDegree int       `json:"skip_degree"`
 }
 
 type CountResponse struct {
