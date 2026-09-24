@@ -28,27 +28,10 @@ type PostRequestData struct {
 	Aliases  map[string]string `json:"aliases,omitempty"`
 }
 type PostResponse struct {
-	StatusCode int               `json:"-"`
-	Header     http.Header       `json:"-"`
-	Body       io.ReadCloser     `json:"-"`
-	Data       *PostResponseData `json:"data"`
-}
-type PostResponseData struct {
-	RequestID string `json:"requestId,omitempty"`
-	Status    struct {
-		Message    string `json:"message"`
-		Code       int    `json:"code"`
-		Attributes struct {
-		} `json:"attributes"`
-	} `json:"status"`
-	Result struct {
-		Data interface{} `json:"data"`
-		Meta interface{} `json:"meta"`
-	} `json:"result,omitempty"`
-	Exception string   `json:"exception,omitempty"`
-	Message   string   `json:"message,omitempty"`
-	Cause     string   `json:"cause,omitempty"`
-	Trace     []string `json:"trace,omitempty"`
+	StatusCode int           `json:"-"`
+	Header     http.Header   `json:"-"`
+	Body       io.ReadCloser `json:"-"`
+	Data       *ResponseData `json:"data"`
 }
 
 func (g Post) WithCypher(cypher string) func(request *PostRequest) {
@@ -97,7 +80,7 @@ func (g PostRequest) Do(ctx context.Context, transport api.Transport) (*PostResp
 		return nil, err
 	}
 
-	respData := &PostResponseData{}
+	respData := &ResponseData{}
 	err = json.Unmarshal(bytes, respData)
 	if err != nil {
 		return nil, err

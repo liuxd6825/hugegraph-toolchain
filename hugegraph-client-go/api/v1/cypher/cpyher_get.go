@@ -2,6 +2,7 @@ package cypher
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -17,28 +18,10 @@ type GetRequest struct {
 	ctx context.Context
 }
 type GetResponse struct {
-	StatusCode int               `json:"-"`
-	Header     http.Header       `json:"-"`
-	Body       io.ReadCloser     `json:"-"`
-	Data       *PostResponseData `json:"data"`
-}
-
-type GetResponseData struct {
-	RequestID string `json:"requestId,omitempty"`
-	Status    struct {
-		Message    string `json:"message"`
-		Code       int    `json:"code"`
-		Attributes struct {
-		} `json:"attributes"`
-	} `json:"status"`
-	Result struct {
-		Data interface{} `json:"data"`
-		Meta interface{} `json:"meta"`
-	} `json:"result,omitempty"`
-	Exception string   `json:"exception,omitempty"`
-	Message   string   `json:"message,omitempty"`
-	Cause     string   `json:"cause,omitempty"`
-	Trace     []string `json:"trace,omitempty"`
+	StatusCode int           `json:"-"`
+	Header     http.Header   `json:"-"`
+	Body       io.ReadCloser `json:"-"`
+	Data       *ResponseData `json:"data"`
 }
 
 func (g Get) WithCypher(cypher string) func(request *GetRequest) {
@@ -85,14 +68,20 @@ func (g GetRequest) Do(ctx context.Context, transport api.Transport) (*GetRespon
 		return nil, err
 	}
 
+	gremlinPostResp := &GetResponse{}
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	fmt.Println(string(bytes))
-
-	gremlinGetResponse := &GetResponse{}
-	gremlinGetResponse.StatusCode = res.StatusCode
-	return gremlinGetResponse, nil
+	respData := &ResponseData{}
+	err = json.Unmarshal(bytes, respData)
+	if err != nil {
+		return nil, err
+	}
+	gremlinPostResp.StatusCode = res.StatusCode
+	gremlinPostResp.Header = res.Header
+	gremlinPostResp.Body = res.Body
+	gremlinPostResp.Data = respData
+	return gremlinPostResp, nil
 }
