@@ -26,6 +26,7 @@ import (
 	"os"
 
 	"github.com/apache/hugegraph-toolchain/hugegraph-client-go/api/v1"
+	"github.com/apache/hugegraph-toolchain/hugegraph-client-go/api/v1/cypher"
 	"github.com/apache/hugegraph-toolchain/hugegraph-client-go/api/v1/edgelabel"
 	"github.com/apache/hugegraph-toolchain/hugegraph-client-go/api/v1/gremlin"
 	"github.com/apache/hugegraph-toolchain/hugegraph-client-go/api/v1/propertykey"
@@ -51,6 +52,7 @@ type Config struct {
 type CommonClient struct {
 	Vertex      *vertex.Vertex
 	Gremlin     *gremlin.Gremlin
+	Cypher      *cypher.Cypher
 	Propertykey *propertykey.PropertyKey
 	VertexLabel *vertexlabel.VertexLabel
 	EdgeLabel   *edgelabel.Edgelabel
@@ -106,6 +108,7 @@ func NewCommonClient(cfg Config) (*CommonClient, error) {
 	return &CommonClient{
 		Vertex:      vertex.New(tp),
 		Gremlin:     gremlin.New(tp),
+		Cypher:      cypher.New(tp),
 		Propertykey: propertykey.New(tp),
 		VertexLabel: vertexlabel.New(tp),
 		EdgeLabel:   edgelabel.New(tp),
