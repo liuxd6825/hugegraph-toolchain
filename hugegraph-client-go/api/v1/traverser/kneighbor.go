@@ -87,7 +87,7 @@ func (r KneighborBasicRequest) Do(ctx context.Context, transport api.Transport) 
 		params.Add("limit", int64ToString(r.limit))
 	}
 
-	url := buildTraverserURL(transport, "kneighbor")
+	url := getURL(transport, "kneighbor")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err
@@ -204,7 +204,7 @@ func (r KneighborAdvancedRequest) Do(ctx context.Context, transport api.Transpor
 		r.body = strings.NewReader(string(byteBody))
 	}
 
-	url := buildTraverserURL(transport, "kneighbor")
+	url := getURL(transport, "kneighbor")
 	req, err := api.NewRequest("POST", url, nil, r.body)
 	if err != nil {
 		return nil, err

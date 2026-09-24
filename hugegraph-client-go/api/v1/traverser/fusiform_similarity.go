@@ -102,7 +102,7 @@ func (r FusiformSimilarityRequest) Do(ctx context.Context, transport api.Transpo
 		r.body = strings.NewReader(string(byteBody))
 	}
 
-	url := buildTraverserURL(transport, "fusiformsimilarity")
+	url := getURL(transport, "fusiformsimilarity")
 	req, err := api.NewRequest("POST", url, nil, r.body)
 	if err != nil {
 		return nil, err

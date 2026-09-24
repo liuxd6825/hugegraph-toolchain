@@ -83,7 +83,7 @@ func (r JaccardSimilarityRequest) Do(ctx context.Context, transport api.Transpor
 		params.Add("max_degree", int64ToString(r.maxDegree))
 	}
 
-	url := buildTraverserURL(transport, "jaccardsimilarity")
+	url := getURL(transport, "jaccardsimilarity")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err
@@ -189,7 +189,7 @@ func (r JaccardSimilarityPostRequest) Do(ctx context.Context, transport api.Tran
 		r.body = strings.NewReader(string(byteBody))
 	}
 
-	url := buildTraverserURL(transport, "jaccardsimilarity")
+	url := getURL(transport, "jaccardsimilarity")
 	req, err := api.NewRequest("POST", url, nil, r.body)
 	if err != nil {
 		return nil, err

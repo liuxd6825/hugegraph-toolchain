@@ -843,7 +843,6 @@ func TestTraverserCustomizedPaths(t *testing.T) {
 			Steps: traverser.Steps{
 				Direction: traverser.Both,
 			},
-			Limit: 5,
 		}),
 	)
 	if err != nil {
@@ -864,8 +863,10 @@ func TestTraverserTemplatePaths(t *testing.T) {
 			Targets: traverser.SourcesTargets{
 				Ids: []string{"PnRAAeb4liYYMyLfpsA7e9bu_李兴源"},
 			},
-			Steps: traverser.Steps{
-				Direction: traverser.Both,
+			Steps: []traverser.TemplatePathsStep{
+				{
+					Direction: traverser.Both,
+				},
 			},
 			Limit: 5,
 		}),

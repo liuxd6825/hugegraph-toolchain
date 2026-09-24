@@ -93,7 +93,7 @@ func (r EdgeExistenceRequest) Do(ctx context.Context, transport api.Transport) (
 		params.Add("limit", intToString(r.limit))
 	}
 
-	url := buildTraverserURL(transport, "edgeexist")
+	url := getURL(transport, "edgeexist")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err

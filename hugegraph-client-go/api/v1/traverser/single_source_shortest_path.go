@@ -103,7 +103,7 @@ func (r SingleSourceShortestPathRequest) Do(ctx context.Context, transport api.T
 		params.Add("with_vertex", boolToString(r.withVertex))
 	}
 
-	url := buildTraverserURL(transport, "singlesourceshortestpath")
+	url := getURL(transport, "singlesourceshortestpath")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err

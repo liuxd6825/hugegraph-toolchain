@@ -68,7 +68,7 @@ func (r EdgesByIDRequest) Do(ctx context.Context, transport api.Transport) (*Edg
 		params.Add("ids", quoteVertexID(id))
 	}
 
-	url := buildTraverserURL(transport, "edges")
+	url := getURL(transport, "edges")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err
@@ -146,7 +146,7 @@ func (r EdgesShardsRequest) Do(ctx context.Context, transport api.Transport) (*E
 	params := &url.Values{}
 	params.Add("split_size", int64ToString(r.splitSize))
 
-	url := buildTraverserURL(transport, "edges/shards")
+	url := getURL(transport, "edges/shards")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err
@@ -238,7 +238,7 @@ func (r EdgesScanRequest) Do(ctx context.Context, transport api.Transport) (*Edg
 		params.Add("page_limit", intToString(r.pageLimit))
 	}
 
-	url := buildTraverserURL(transport, "edges/scan")
+	url := getURL(transport, "edges/scan")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err

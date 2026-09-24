@@ -95,14 +95,14 @@ func New(t api.Transport) *Traverser {
 	}
 }
 
-// buildTraverserURL returns the URL for a traverser endpoint, automatically
+// getURL returns the URL for a traverser endpoint, automatically
 // switching between the GraphSpace and non-GraphSpace form depending on the
 // transport configuration. The suffix must not begin with a slash.
-func buildTraverserURL(transport api.Transport, suffix string) string {
+func getURL(transport api.Transport, suffix string) string {
 	cfg := transport.GetConfig()
-	/*	if len(cfg.GraphSpace) > 0 {
+	if len(cfg.GraphSpace) > 0 {
 		return fmt.Sprintf("/graphspaces/%s/graphs/%s/traversers/%s",
 			cfg.GraphSpace, cfg.Graph, suffix)
-	}*/
+	}
 	return fmt.Sprintf("/graphs/%s/traversers/%s", cfg.Graph, suffix)
 }

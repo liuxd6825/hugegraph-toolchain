@@ -68,7 +68,7 @@ func (r VerticesByIDRequest) Do(ctx context.Context, transport api.Transport) (*
 		params.Add("ids", quoteVertexID(id))
 	}
 
-	url := buildTraverserURL(transport, "vertices")
+	url := getURL(transport, "vertices")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err
@@ -152,7 +152,7 @@ func (r VerticesShardsRequest) Do(ctx context.Context, transport api.Transport) 
 	params := &url.Values{}
 	params.Add("split_size", int64ToString(r.splitSize))
 
-	url := buildTraverserURL(transport, "vertices/shards")
+	url := getURL(transport, "vertices/shards")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err
@@ -244,7 +244,7 @@ func (r VerticesScanRequest) Do(ctx context.Context, transport api.Transport) (*
 		params.Add("page_limit", intToString(r.pageLimit))
 	}
 
-	url := buildTraverserURL(transport, "vertices/scan")
+	url := getURL(transport, "vertices/scan")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err

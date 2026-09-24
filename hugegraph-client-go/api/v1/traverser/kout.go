@@ -96,7 +96,7 @@ func (r KoutBasicRequest) Do(ctx context.Context, transport api.Transport) (*Kou
 		params.Add("limit", int64ToString(r.limit))
 	}
 
-	url := buildTraverserURL(transport, "kout")
+	url := getURL(transport, "kout")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err
@@ -261,7 +261,7 @@ func (r KoutAdvancedRequest) Do(ctx context.Context, transport api.Transport) (*
 		r.body = strings.NewReader(body)
 	}
 
-	url := buildTraverserURL(transport, "kout")
+	url := getURL(transport, "kout")
 	req, err := api.NewRequest("POST", url, nil, r.body)
 	if err != nil {
 		return nil, err

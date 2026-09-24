@@ -101,7 +101,7 @@ func (r CrosspointsRequest) Do(ctx context.Context, transport api.Transport) (*C
 		params.Add("limit", int64ToString(r.limit))
 	}
 
-	url := buildTraverserURL(transport, "crosspoints")
+	url := getURL(transport, "crosspoints")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err
@@ -224,7 +224,7 @@ func (r CustomizedCrosspointsRequest) Do(ctx context.Context, transport api.Tran
 		r.body = strings.NewReader(string(byteBody))
 	}
 
-	url := buildTraverserURL(transport, "customizedcrosspoints")
+	url := getURL(transport, "customizedcrosspoints")
 	req, err := api.NewRequest("POST", url, nil, r.body)
 	if err != nil {
 		return nil, err

@@ -112,7 +112,7 @@ func (r WeightedShortestPathRequest) Do(ctx context.Context, transport api.Trans
 		params.Add("with_vertex", boolToString(r.withVertex))
 	}
 
-	url := buildTraverserURL(transport, "weightedshortestpath")
+	url := getURL(transport, "weightedshortestpath")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err

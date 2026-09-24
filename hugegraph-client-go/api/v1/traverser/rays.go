@@ -94,7 +94,7 @@ func (r RaysRequest) Do(ctx context.Context, transport api.Transport) (*RaysResp
 		params.Add("limit", int64ToString(r.limit))
 	}
 
-	url := buildTraverserURL(transport, "rays")
+	url := getURL(transport, "rays")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err

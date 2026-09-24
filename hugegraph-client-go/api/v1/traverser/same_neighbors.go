@@ -86,7 +86,7 @@ func (r SameNeighborsRequest) Do(ctx context.Context, transport api.Transport) (
 		params.Add("limit", int64ToString(r.limit))
 	}
 
-	url := buildTraverserURL(transport, "sameneighbors")
+	url := getURL(transport, "sameneighbors")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err

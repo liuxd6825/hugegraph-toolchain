@@ -86,7 +86,7 @@ func (r MultiNodeShortestPathRequest) Do(ctx context.Context, transport api.Tran
 		r.body = strings.NewReader(string(byteBody))
 	}
 
-	url := buildTraverserURL(transport, "multinodeshortestpath")
+	url := getURL(transport, "multinodeshortestpath")
 	req, err := api.NewRequest("POST", url, nil, r.body)
 	if err != nil {
 		return nil, err

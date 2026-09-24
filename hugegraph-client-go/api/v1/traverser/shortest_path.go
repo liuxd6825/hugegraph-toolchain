@@ -97,7 +97,7 @@ func (r ShortestPathRequest) Do(ctx context.Context, transport api.Transport) (*
 		params.Add("capacity", int64ToString(r.capacity))
 	}
 
-	url := buildTraverserURL(transport, "shortestpath")
+	url := getURL(transport, "shortestpath")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err

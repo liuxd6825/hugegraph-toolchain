@@ -96,7 +96,7 @@ func (r RingsRequest) Do(ctx context.Context, transport api.Transport) (*RingsRe
 		params.Add("limit", int64ToString(r.limit))
 	}
 
-	url := buildTraverserURL(transport, "rings")
+	url := getURL(transport, "rings")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err

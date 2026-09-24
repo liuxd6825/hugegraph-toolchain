@@ -96,7 +96,7 @@ func (r PathsBasicRequest) Do(ctx context.Context, transport api.Transport) (*Pa
 		params.Add("limit", int64ToString(r.limit))
 	}
 
-	url := buildTraverserURL(transport, "paths")
+	url := getURL(transport, "paths")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err
@@ -219,7 +219,7 @@ func (r PathsAdvancedRequest) Do(ctx context.Context, transport api.Transport) (
 		r.body = strings.NewReader(string(byteBody))
 	}
 
-	url := buildTraverserURL(transport, "paths")
+	url := getURL(transport, "paths")
 	req, err := api.NewRequest("POST", url, nil, r.body)
 	if err != nil {
 		return nil, err
@@ -360,7 +360,7 @@ func (r CustomizedPathsRequest) Do(ctx context.Context, transport api.Transport)
 		r.body = strings.NewReader(string(byteBody))
 	}
 
-	url := buildTraverserURL(transport, "customizedpaths")
+	url := getURL(transport, "customizedpaths")
 	req, err := api.NewRequest("POST", url, nil, r.body)
 	if err != nil {
 		return nil, err
@@ -485,7 +485,7 @@ func (r TemplatePathsRequest) Do(ctx context.Context, transport api.Transport) (
 		r.body = strings.NewReader(string(byteBody))
 	}
 
-	url := buildTraverserURL(transport, "templatepaths")
+	url := getURL(transport, "templatepaths")
 	req, err := api.NewRequest("POST", url, nil, r.body)
 	if err != nil {
 		return nil, err

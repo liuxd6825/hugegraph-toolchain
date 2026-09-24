@@ -86,7 +86,7 @@ func (r ResourceAllocationRequest) Do(ctx context.Context, transport api.Transpo
 		params.Add("limit", int64ToString(r.limit))
 	}
 
-	url := buildTraverserURL(transport, "resourceallocation")
+	url := getURL(transport, "resourceallocation")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err

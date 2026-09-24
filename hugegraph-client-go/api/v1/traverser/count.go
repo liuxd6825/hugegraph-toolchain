@@ -88,7 +88,7 @@ func (r CountRequest) Do(ctx context.Context, transport api.Transport) (*CountRe
 		r.body = strings.NewReader(string(byteBody))
 	}
 
-	url := buildTraverserURL(transport, "count")
+	url := getURL(transport, "count")
 	req, err := api.NewRequest("POST", url, nil, r.body)
 	if err != nil {
 		return nil, err

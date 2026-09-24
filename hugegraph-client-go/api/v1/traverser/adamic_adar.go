@@ -86,7 +86,7 @@ func (r AdamicAdarRequest) Do(ctx context.Context, transport api.Transport) (*Ad
 		params.Add("limit", int64ToString(r.limit))
 	}
 
-	url := buildTraverserURL(transport, "adamicadar")
+	url := getURL(transport, "adamicadar")
 	req, err := api.NewRequest("GET", url, params, nil)
 	if err != nil {
 		return nil, err
