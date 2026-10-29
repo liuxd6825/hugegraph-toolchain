@@ -55,3 +55,28 @@ type Edge[T any] struct {
 	InVLabel   string `json:"inVLabel"`
 	Properties T      `json:"properties"`
 }
+
+func (v *Vertex[T]) SetID(val string) *Vertex[T] {
+	v.ID = val
+	return v
+}
+
+func (v *Vertex[T]) SetLabel(val string) *Vertex[T] {
+	v.Label = val
+	return v
+}
+
+func (v *Vertex[T]) SetTyp(val string) *Vertex[T] {
+	v.Typ = val
+	return v
+}
+
+func (v *Vertex[T]) SetProperties(val T) *Vertex[T] {
+	v.Properties = val
+	return v
+}
+
+func (v *Vertex[T]) Propertie(key string, val T) *Vertex[T] {
+	v.Properties = val
+	return v
+}

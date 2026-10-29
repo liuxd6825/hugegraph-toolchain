@@ -27,7 +27,7 @@ import (
 	"net/url"
 
 	"github.com/apache/hugegraph-toolchain/hugegraph-client-go/api"
-	"github.com/apache/hugegraph-toolchain/hugegraph-client-go/internal/model"
+	"github.com/apache/hugegraph-toolchain/hugegraph-client-go/api/v1/model"
 )
 
 func newVerticesByIDFunc(t api.Transport) VerticesByID {

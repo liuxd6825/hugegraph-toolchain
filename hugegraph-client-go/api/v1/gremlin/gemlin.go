@@ -169,7 +169,7 @@ func (r request) buildDefaultAliases(transport api.Transport) map[string]string 
 
 	graph := cfg.Graph
 	if r.graph == "" {
-		graph = r.graph
+		graph = cfg.Graph
 	}
 	if graph == "" {
 		graph = "hugegraph"
